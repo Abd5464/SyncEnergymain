@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sync Energy Waste to Power. Locally Built. Nationally Scalable.</title>
+  <meta name="description"
+    content="Sync Energy is a Nigerian biogas startup converting organic waste into clean energy, cooking gas, and organic fertilizer through IoT-enabled biodigesters." />
+  <meta name="theme-color" content="#1A7A4A" />
+
+  <!-- Tailwind via CDN (no build step required) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap"
+    rel="stylesheet" />
+
+  <script>
+    // Tailwind config — Sync Energy brand palette
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: "#1A7A4A",
+              accent: "#2ECC71",
+              dark: "#111827",
+              offwhite: "#F7F9F5",
+              amber: "#F5A623",
+            },
+          },
+          fontFamily: {
+            sans: ["Inter", "system-ui", "sans-serif"],
+            display: ["Sora", "Inter", "sans-serif"],
+          },
+          boxShadow: {
+            card: "0 4px 20px -4px rgba(17,24,39,0.08)",
+            "card-hover": "0 16px 40px -8px rgba(17,24,39,0.18)",
+          },
+        },
+      },
+    };
+  </script>
+
+
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+
+    }
+
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: Sora, Inter, sans-serif;
+      letter-spacing: -0.02em;
+    }
+
+    .eyebrow {
+      font-size: .75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .2em;
+      color: #F5A623;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      min-height: 44px;
+      border-radius: 9999px;
+      background: #1A7A4A;
+      color: #fff;
+      padding: .75rem 1.75rem;
+      font-weight: 600;
+      font-size: 1rem;
+      box-shadow: 0 4px 20px -4px rgba(17, 24, 39, .08);
+      transition: all .2s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: #2ECC71;
+      transform: scale(1.05);
+      box-shadow: 0 16px 40px -8px rgba(17, 24, 39, .18);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      min-height: 44px;
+      border-radius: 9999px;
+      border: 2px solid #1A7A4A;
+      color: #1A7A4A;
+      padding: .75rem 1.75rem;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all .2s ease;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      background: #1A7A4A;
+      color: #fff;
+    }
+
+    /* Animated underline for nav links */
+    .nav-link {
+      position: relative;
+      display: inline-block;
+      padding: .25rem 0;
+      transition: color .2s;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      height: 2px;
+      width: 100%;
+      background: #1A7A4A;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .2s ease;
+    }
+
+    .nav-link:hover::after,
+    .nav-link:focus-visible::after {
+      transform: scaleX(1);
+    }
+
+    .nav-link:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Scroll-reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Hero bouncing arrow */
+    @keyframes bounceArrow {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(10px)
+      }
+    }
+
+    .bounce-arrow {
+      animation: bounceArrow 1.6s ease-in-out infinite;
+    }
+
+    /* Card hover lift */
+    .lift {
+      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;
+    }
+
+    .lift:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px -8px rgba(17, 24, 39, .18);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-white text-brand-dark">
+
+  <!-- ============================= NAVBAR ============================= -->
+  <header id="navbar" class="fixed inset-x-0 top-0 z-50 transition-all duration-300 bg-transparent">
+    <nav aria-label="Primary" class="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8 md:h-20">
+      <a href="#hero" id="logo"
+        class="flex items-center gap-2 text-lg font-extrabold tracking-tight text-white transition-colors">
+        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-primary text-white">
+          <!-- leaf icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+          </svg>
+        </span>
+        Sync Energy
+      </a>
+
+      <!-- Desktop links -->
+      <div id="desktop-links" class="hidden items-center gap-8 md:flex text-white">
+        <a href="#about" class="nav-link text-sm font-medium">About</a>
+        <a href="#technology" class="nav-link text-sm font-medium">Technology</a>
+        <a href="#service" class="nav-link text-sm font-medium">Service</a>
+        <a href="#impact" class="nav-link text-sm font-medium">Impact</a>
+        <a href="#contact" class="nav-link text-sm font-medium">Contact</a>
+      </div>
+
+      <!-- Hamburger -->
+      <button id="hamburger" type="button" aria-label="Open menu" aria-expanded="false"
+        class="flex h-11 w-11 items-center justify-center rounded-lg text-white md:hidden">
+        <svg id="icon-menu" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="4" x2="20" y1="6" y2="6" />
+          <line x1="4" x2="20" y1="12" y2="12" />
+          <line x1="4" x2="20" y1="18" y2="18" />
+        </svg>
+        <svg id="icon-close" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <line x1="18" x2="6" y1="6" y2="18" />
+          <line x1="6" x2="18" y1="6" y2="18" />
+        </svg>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Mobile drawer -->
+  <div id="overlay" class="fixed inset-0 z-40 hidden bg-brand-dark/40 md:hidden"></div>
+  <div id="drawer"
+    class="fixed right-0 top-0 z-50 flex h-full w-72 max-w-[80%] translate-x-full flex-col gap-2 bg-white px-6 pt-24 shadow-2xl transition-transform duration-300 md:hidden">
+    <a href="#about"
+      class="drawer-link flex min-h-[44px] items-center border-b border-brand-offwhite text-base font-medium text-brand-dark hover:text-brand-primary">About</a>
+    <a href="#technology"
+      class="drawer-link flex min-h-[44px] items-center border-b border-brand-offwhite text-base font-medium text-brand-dark hover:text-brand-primary">Technology</a>
+    <a href="#service"
+      class="drawer-link flex min-h-[44px] items-center border-b border-brand-offwhite text-base font-medium text-brand-dark hover:text-brand-primary">Service</a>
+    <a href="#impact"
+      class="drawer-link flex min-h-[44px] items-center border-b border-brand-offwhite text-base font-medium text-brand-dark hover:text-brand-primary">Impact</a>
+    <a href="#contact"
+      class="drawer-link flex min-h-[44px] items-center border-b border-brand-offwhite text-base font-medium text-brand-dark hover:text-brand-primary">Contact</a>
+  </div>
+
+
+
+  <main>
+
+
+    <!-- ============================= HERO ============================= -->
+    <section id="hero" class="relative flex min-h-screen items-center overflow-hidden">
+      <!-- Background: replace this gradient with: style="background-image:url('hero.jpg')" -->
+      <div class="absolute inset-0 "=>
+
+        <!-- Dark green gradient overlay for legibility -->
+        <div class="absolute inset-0">
+
+          <video class="w-full h-full object-cover" autoplay muted loop playsinline>
+            <source src="sync-energy-mvp.mp4" type="video/mp4" />
+          </video>
+
+
+        </div>
+
+      </div>
+
+      <div class="relative mx-auto w-full max-w-7xl px-5 py-32 sm:px-8">
+        <div class="max-w-3xl">
+          <p class="eyebrow mb-9">Waste to Power. Locally Built. Nationally Scalable.</p>
+          <h1 class="font-extrabold leading-[1.05] text-white" style="font-size:clamp(2.6rem,6vw,5rem)">
+            Sync Energy : Transforming Organic Waste into Power, Cooking Gas, and Organic Fertilizer
+          </h1>
+          <p class="mt-6 max-w-[600px] text-lg text-white/80">
+            Driven by real-time IoT telemetry at its source.
+          </p>
+          <a href="#contact" class="btn-primary mt-9">
+            Join the Pilot Phase
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <a href="#about" aria-label="Scroll to About"
+        class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/80 hover:text-white">
+        <svg class="bounce-arrow" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </a>
+    </section>
+
+    <!-- ============================= ABOUT ============================= -->
+    <section id="about" class="bg-brand-offwhite">
+      <div
+        class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-5 py-20 sm:px-8 md:py-28 lg:grid-cols-2 lg:gap-16">
+        <div>
+          <div class="reveal">
+            <p class="eyebrow mb-3">About Sync Energy</p>
+            <h2 class="text-3xl font-bold sm:text-4xl">Bridging Nigeria&rsquo;s Energy and Waste Crisis</h2>
+          </div>
+          <div class="mt-8 space-y-5">
+            <p class="reveal text-base leading-relaxed text-brand-dark/75">Over 85 million people in Nigeria still lack
+              access to reliable electricity, while the country generates more than 16 million tons of waste annually
+              that decomposes, releasing methane and accelerating climate change.</p>
+            <p class="reveal text-base leading-relaxed text-brand-dark/75">At Sync, We bridge this gap through a smart
+              waste-to-energy ecosystem that converts organic waste into measurable environmental
+              and economic value. We collect organic waste
+              directly from farms, agro-processors, and waste management plants, preventing uncontrolled emissions and
+              converting them into cooking gas, clean energy, and organic fertilizer.</p>
+
+            <p class="reveal text-base leading-relaxed text-brand-dark/75">Our initial target market includes 2,000 to
+              5,000 high-impact users, comprising livestock farmers, agro-processors, industrial operators, residential
+              estates, and underserved communities requiring reliable base-load energy solutions.</p>
+          </div>
+        </div>
+
+        <div class="flex flex-col justify-center gap-5">
+          <div class="reveal lift rounded-xl border-l-4 border-brand-primary bg-white p-6 shadow-card">
+            <p class="text-3xl font-extrabold text-brand-amber sm:text-4xl" style="font-family:Sora">85M+</p>
+            <p class="mt-2 text-sm font-medium text-brand-dark/70">Nigerians without reliable electricity</p>
+          </div>
+          <div class="reveal lift rounded-xl border-l-4 border-brand-primary bg-white p-6 shadow-card">
+            <p class="text-3xl font-extrabold text-brand-amber sm:text-4xl" style="font-family:Sora">16M+ tons</p>
+            <p class="mt-2 text-sm font-medium text-brand-dark/70">Annual waste generated in Nigeria</p>
+          </div>
+          <div class="reveal lift rounded-xl border-l-4 border-brand-primary bg-white p-6 shadow-card">
+            <p class="text-3xl font-extrabold text-brand-amber sm:text-4xl" style="font-family:Sora">2,000&ndash;5,000
+            </p>
+            <p class="mt-2 text-sm font-medium text-brand-dark/70">Initial target users</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================= TECHNOLOGY ============================= -->
+    <section id="technology" class="bg-white">
+
+      <div class="mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 md:py-28">
+        <div class="reveal">
+          <p class="eyebrow mb-3">Our Technology</p>
+          <h2 class="max-w-3xl text-3xl font-bold sm:text-4xl">From Proof of Concept to IoT-Enabled Intelligence</h2>
+        </div>
+
+        <div class="mt-12 grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <p class="reveal text-base leading-relaxed text-brand-dark/75 font-medium">
+            Following the successful validation of our 25-liter prototype, which achieved stable biogas production over
+            a 16-day
+            testing period, Sync Energy is scaling into its pilot phase with a 1m³ smart biodigester. Equipped with
+            ESP32-based IoT
+            monitoring, the system captures real-time operational data, enabling process optimization, performance
+            analytics, and
+            scalable deployment. This marks the transition from proof-of-concept to intelligent waste-to-energy
+            infrastructure.
+
+          </p>
+          <!-- Diagram placeholder: replace inner content / background with your schematic -->
+          <div
+            class="reveal relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-brand-offwhite shadow-card flex items-center justify-center"
+            style="background:radial-gradient(circle at 50% 45%, #ffffff 0%, #EAF4EC 70%, #DCEFE1 100%);">
+            <span class="text-sm font-medium text-brand-primary/60">
+              <img src="WhatsApp Image 2026-04-17 at 10.35.29.jpeg" alt="Sync Energy Diagram"
+                class="w-full h-full object-cover">
+
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div>
+
+
+      </div>
+
+
+      </div>
+
+
+      </div>
+
+
+
+
+    </section>
+
+
+
+
+    <section id="technology" class="bg-[#050c0e] py-20 text-white overflow-hidden">
+      <div class="mx-auto w-full max-w-7xl px-5 sm:px-8">
+
+        <div
+          class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start bg-dashboard-bg border border-slate-800 rounded-2xl p-6 sm:p-10 font-sans shadow-2xl">
+
+          <div class="lg:col-span-5 flex flex-col justify-between h-full reveal space-y-8">
+            <div>
+              <div
+                class="text-dashboard-accentGreen font-mono font-bold text-xs uppercase tracking-widest mb-3 flex items-center gap-1">
+                Data-driven precision biology
+              </div>
+              <h2 class="text-2xl sm:text-4xl font-extrabold text-white leading-tight font-display">
+                The Smart IoT Optimization Framework<span
+                  class="text-slate-600 text-lg font-mono tracking-normal"></span>.
+              </h2>
+
+            </div>
+
+            <div class="bg-slate-900/60 border border-slate-800 p-4 rounded-xl space-y-3">
+              <div class="text-xs uppercase tracking-wider text-dashboard-accentAmber font-mono font-bold">
+                Real-time Feedstock Simulator
+              </div>
+              <p class="text-xs text-slate-400">
+                Simulate different waste inputs to watch the system dynamically optimize parameters
+                live:
+              </p>
+              <div class="grid grid-cols-3 gap-2 pt-1">
+                <button onclick="simulateFeedstock('Cow Manure', 37.2, 6.85, 12.40, 78.4)"
+                  class="text-[11px] font-mono bg-dashboard-card border border-slate-700 hover:border-dashboard-accentGreen px-2 py-1.5 rounded transition text-slate-200">
+                  + Cow Manure
+                </button>
+                <button onclick="simulateFeedstock('Food Waste', 36.5, 6.40, 6.15, 71.2)"
+                  class="text-[11px] font-mono bg-dashboard-card border border-slate-700 hover:border-dashboard-accentAmber px-2 py-1.5 rounded transition text-slate-200">
+                  + Food Waste
+                </button>
+                <button onclick="simulateFeedstock('Poultry Drop', 38.0, 7.20, 18.90, 81.5)"
+                  class="text-[11px] font-mono bg-dashboard-card border border-slate-700 hover:border-dashboard-accentGreen px-2 py-1.5 rounded transition text-slate-200">
+                  + Poultry Drop
+                </button>
+              </div>
+            </div>
+
+            <div class="space-y-4 pt-4 border-t border-slate-800/60 text-xs sm:text-sm">
+              <div class="flex items-start gap-3">
+                <span class="text-dashboard-accentGreen mt-1 font-bold">✓</span>
+                <p class="text-slate-300">
+                  <strong class="text-white uppercase font-mono tracking-wider">Input Vector
+                    Monitoring:</strong> Real-time tracking of mass, feedstock profiles, and loading
+                  rates.
+                </p>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="text-dashboard-accentGreen mt-1 font-bold">✓</span>
+                <p class="text-slate-300">
+                  <strong class="text-white uppercase font-mono tracking-wider">Biological
+                    Balancing:</strong> Waterproof DS18B20 nodes and pH arrays monitor decomposition
+                  health.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 w-full space-y-4 reveal font-mono">
+
+            <div
+              class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-dashboard-card/50 border border-slate-800/80 p-4 rounded-xl">
+              <div class="flex items-center gap-4">
+                <div class="flex gap-1.5">
+                  <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+                  <span class="w-3 h-3 rounded-full bg-dashboard-accentAmber animate-pulse"></span>
+                  <span class="w-3 h-3 rounded-full bg-dashboard-accentGreen"></span>
+                </div>
+                <div class="text-xs text-slate-400 font-medium tracking-wide">
+                  SYNC ENERGY CONTROL PANEL
+                </div>
+              </div>
+              <div
+                class="bg-emerald-950/40 border border-emerald-800/40 text-dashboard-accentGreen text-[11px] px-3 py-1.5 rounded flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-dashboard-accentGreen animate-ping"></span>
+                ESP32 STATUS: <span id="stream-status" class="font-bold">ACTIVE</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+              <div
+                class="bg-dashboard-card border border-slate-800/70 p-5 rounded-xl flex flex-col justify-between hover:border-slate-700 transition">
+                <div>
+                  <div class="text-slate-400 text-[10px] uppercase tracking-wider flex items-center justify-between">
+                    <span>Digester Reaction Temp</span>
+                  </div>
+                  <div class="text-3xl font-bold text-white mt-2 font-sans flex items-baseline gap-1 metric-transition">
+                    <span id="metric-temp">37.0</span><span class="text-lg font-light text-slate-400">°C</span>
+                  </div>
+                </div>
+                <div class="w-full bg-slate-800 h-1 rounded mt-5 overflow-hidden">
+                  <div id="bar-temp" class="bg-dashboard-accentGreen h-full w-[0%] bar-transition">
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="bg-dashboard-card border border-slate-800/70 p-5 rounded-xl flex flex-col justify-between hover:border-slate-700 transition">
+                <div>
+                  <div class="text-slate-400 text-[10px] uppercase tracking-wider flex items-center justify-between">
+                    <span>Reaction Slurry Health</span>
+                  </div>
+                  <div
+                    class="text-3xl font-bold text-dashboard-accentGreen mt-2 font-sans flex items-baseline gap-1 metric-transition"
+                    id="container-ph">
+                    <span id="metric-ph">6.91</span><span class="text-sm font-normal text-slate-400 font-mono">pH</span>
+                  </div>
+                </div>
+                <div class="w-full bg-slate-800 h-1 rounded mt-5 overflow-hidden">
+                  <div id="bar-ph" class="bg-dashboard-accentGreen h-full w-[0%] bar-transition">
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="bg-dashboard-card border border-slate-800/70 p-5 rounded-xl flex flex-col justify-between hover:border-slate-700 transition">
+                <div>
+                  <div class="text-slate-400 text-[10px] uppercase tracking-wider flex items-center justify-between">
+                    <span>Batch Input Vector Log</span>
+                  </div>
+                  <div class="text-3xl font-bold text-white mt-2 font-sans flex items-baseline gap-1 metric-transition">
+                    <span id="metric-mass">8.53</span><span class="text-base font-light text-slate-400">kg</span>
+                  </div>
+                </div>
+                <div class="text-[9px] text-slate-500 uppercase mt-4 tracking-wider flex justify-between">
+                  <span>Load Cell Compression Value</span>
+                  <span id="active-feedstock" class="text-dashboard-accentAmber font-bold">Standard
+                    Mix</span>
+                </div>
+              </div>
+
+              <div
+                class="bg-dashboard-card border border-slate-800/70 p-5 rounded-xl flex flex-col justify-between hover:border-slate-700 transition">
+                <div>
+                  <div class="text-slate-400 text-[10px] uppercase tracking-wider flex items-center justify-between">
+                    <span>Methane Concentrate Yield</span>
+                  </div>
+                  <div
+                    class="text-3xl font-bold text-dashboard-accentAmber mt-2 font-sans flex items-baseline gap-1 metric-transition">
+                    <span id="metric-yield">75.1</span><span
+                      class="text-lg font-light text-dashboard-accentAmber">%</span>
+                  </div>
+                </div>
+                <div class="text-[9px] text-slate-500 uppercase mt-4 tracking-wider">
+                  Stable Recovery Capacity Accuracy
+                </div>
+              </div>
+
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-stretch">
+
+              <div
+                class="md:col-span-5 bg-dashboard-card border border-slate-800/70 p-4 rounded-xl flex flex-col justify-between">
+                <div class="text-slate-400 text-[9px] uppercase tracking-wider">
+                  Anaerobic Breakdown Formula
+                </div>
+                <div class="text-sm font-semibold text-white mt-3 tracking-wide">
+                  C₆H₁₂O₆ → 3CH₄ + 3CO₂
+                </div>
+                <div class="text-slate-600 text-[10px] mt-2"></div>
+              </div>
+
+              <div id="safety-card"
+                class="md:col-span-7 bg-emerald-950/20 border border-emerald-900/40 p-4 rounded-xl flex items-center justify-between transition-colors duration-500">
+                <div class="flex items-start gap-3">
+                  <span id="safety-dot"
+                    class="w-2 h-2 rounded-full bg-dashboard-accentGreen mt-1.5 flex-shrink-0 animate-pulse"></span>
+                  <div>
+                    <div id="safety-text"
+                      class="text-dashboard-accentGreen text-xs font-bold uppercase tracking-wider leading-tight transition-colors">
+                      MQ-4 ALERT: 0 PPM METHANE LEAK DETECTED
+                    </div>
+                    <div class="text-emerald-700/80 text-[10px] mt-1 font-mono"></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+    </section>
+
+
+    </section>
+
+
+    </section>
+
+    <section>
+
+
+
+
+
+
+
+
+
+      <!-- ============================= SERVICE ============================= -->
+      <section id="service" class="bg-brand-offwhite">
+        <div class="mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 md:py-28">
+          <div class="reveal">
+            <p class="eyebrow mb-3">Our Service Model</p>
+            <h2 class="text-3xl font-bold sm:text-4xl">A Scalable Commercial Ecosystem</h2>
+            <p class="mt-5 max-w-3xl text-base leading-relaxed text-brand-dark/75">Following system validation and
+              performance optimization through real-world datasets, Sync Energy transitions into a scalable commercial
+              ecosystem built around clean energy production, decentralized distribution, and infrastructure services.
+            </p>
+          </div>
+
+          <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
+            <!-- Card 1 -->
+            <article
+              class="reveal lift group h-full rounded-2xl border border-transparent bg-white p-7 shadow-card hover:border-brand-primary">
+              <span class="text-4xl">🔥</span>
+              <h3 class="mt-4 text-xl font-bold">Clean Cooking Energy Products</h3>
+              <p class="mt-3 text-sm leading-relaxed text-brand-dark/75">We produce and distribute biogas for
+                household and institutional use, packaged in cylinders and storage bag systems.
+                This
+                provides a direct replacement for firewood, charcoal, and LPG, enabling affordable and clean cooking
+                energy access at the community level.</p>
+            </article>
+            <!-- Card 2 -->
+            <article
+              class="reveal lift group h-full rounded-2xl border border-transparent bg-white p-7 shadow-card hover:border-brand-primary">
+              <span class="text-4xl">⚡</span>
+              <h3 class="mt-4 text-xl font-bold">Energy-as-a-Service (EaaS)</h3>
+              <p class="mt-3 text-sm leading-relaxed text-brand-dark/75">Sync Energy delivers decentralized energy
+                solutions for mobility and power generation systems, including:</p>
+              <ul class="mt-4 space-y-2">
+                <li class="flex gap-2 text-sm leading-snug text-brand-dark/75"><span
+                    class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary"></span>Biogas generator conversion
+                  kits (diesel and petrol-to-biogas retrofits)</li>
+                <li class="flex gap-2 text-sm leading-snug text-brand-dark/75"><span
+                    class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary"></span>Generator optimization and
+                  hybrid energy systems</li>
+                <li class="flex gap-2 text-sm leading-snug text-brand-dark/75"><span
+                    class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary"></span>Maintenance and
+                  technical support services</li>
+              </ul>
+              <p class="mt-4 text-sm italic leading-relaxed text-brand-dark/60">Achieved through partnerships with local
+                manufacturers and trained field technicians, ensuring scalability and local capacity development.</p>
+            </article>
+            <!-- Card 3 -->
+            <article
+              class="reveal lift group h-full rounded-2xl border border-transparent bg-white p-7 shadow-card hover:border-brand-primary">
+              <span class="text-4xl">🌱</span>
+              <h3 class="mt-4 text-xl font-bold">Organic Fertilizer Commercialization</h3>
+              <p class="mt-3 text-sm leading-relaxed text-brand-dark/75">The digestate from our biogas process is
+                refined
+                into nutrient-balanced NPK organic fertilizer market-ready for:</p>
+              <ul class="mt-4 space-y-2">
+                <li class="flex gap-2 text-sm leading-snug text-brand-dark/75"><span
+                    class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary"></span>Farmer cooperatives</li>
+                <li class="flex gap-2 text-sm leading-snug text-brand-dark/75"><span
+                    class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary"></span>Agro-processing hubs</li>
+                <li class="flex gap-2 text-sm leading-snug text-brand-dark/75"><span
+                    class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary"></span>Regional agricultural
+                  supply
+                  chains</li>
+              </ul>
+              <p class="mt-4 text-sm italic leading-relaxed text-brand-dark/60">Supporting soil regeneration and
+                sustainable farming practices.</p>
+            </article>
+            <!-- Card 4 -->
+            <article
+              class="reveal lift group h-full rounded-2xl border border-transparent bg-white p-7 shadow-card hover:border-brand-primary">
+              <span class="text-4xl">🏗️</span>
+              <h3 class="mt-4 text-xl font-bold">Infrastructure &amp; EPC Services</h3>
+              <p class="mt-3 text-sm leading-relaxed text-brand-dark/75">At scale, Sync Energy expands into Energy
+                Generation with Engineering, Procurement, and Construction (EPC) services, including:</p>
+              <ul class="mt-4 space-y-2">
+                <li class="flex gap-2 text-sm leading-snug text-brand-dark/75"><span
+                    class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary"></span>waste-to-energy
+                  infrastructure deployment</li>
+                <li class="flex gap-2 text-sm leading-snug text-brand-dark/75"><span
+                    class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary"></span>Industrial biogas systems
+                  for
+                  heat and power generation</li>
+
+                <li class="flex gap-2 text-sm leading-snug text-brand-dark/75"><span
+                    class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary"></span>Advanced gas purification
+                  producing compressed biomethane for industrial and commercial fuel systems
+                </li>
+
+                <li class="flex gap-2 text-sm leading-snug text-brand-dark/75"><span
+                    class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary"></span>Modular digester design and
+                  installation for off-grid communities and agro-industries</li>
+
+
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================= IMPACT ============================= -->
+      <section id="impact" class="text-white" style="background:linear-gradient(135deg,#1A7A4A 0%,#0F5132 100%)">
+        <div class="mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 md:py-28">
+          <div class="reveal text-center">
+            <p class="eyebrow mb-3">Our Impact</p>
+            <h2 class="text-3xl font-bold sm:text-4xl">Powering Communities. Restoring the Planet.</h2>
+          </div>
+
+          <div class="mx-auto mt-14 grid max-w-3xl grid-cols-1 gap-10 text-center sm:grid-cols-2">
+            <div class="reveal">
+              <p class="text-5xl font-extrabold text-brand-amber sm:text-6xl" style="font-family:Sora">
+                <span class="counter" data-target="65" data-decimals="0">0</span>%
+              </p>
+              <p class="mt-3 text-base text-white/80">Energy Cost Savings for Households &amp; SMEs</p>
+            </div>
+            <div class="reveal">
+              <p class="text-5xl font-extrabold text-brand-amber sm:text-6xl" style="font-family:Sora">
+                <span class="counter" data-target="5.2" data-decimals="1">0</span><span class="text-3xl sm:text-4xl">
+                  tonnes/mo</span>
+              </p>
+              <p class="mt-3 text-base text-white/80">Waste Diverted from Landfills</p>
+            </div>
+          </div>
+
+          <div class="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div class="reveal lift h-full rounded-2xl border border-white/20 bg-white/10 p-7 backdrop-blur-md">
+              <span
+                class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-white/15 text-brand-amber">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+                  <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+                </svg>
+              </span>
+              <h3 class="text-lg font-bold">Methane Reduction</h3>
+              <p class="mt-3 text-sm leading-relaxed text-white/80">Mitigating climate change at its source by capturing
+                methane emissions from organic waste before they reach the atmosphere.</p>
+            </div>
+            <div class="reveal lift h-full rounded-2xl border border-white/20 bg-white/10 p-7 backdrop-blur-md">
+              <span
+                class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-white/15 text-brand-amber">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="m17 14 3 3.3a1 1 0 0 1-.7 1.7H4.7a1 1 0 0 1-.7-1.7L7 14h-.3a1 1 0 0 1-.7-1.7L9 9h-.2A1 1 0 0 1 8 7.3L12 3l4 4.3a1 1 0 0 1-.8 1.7H15l3 3.3a1 1 0 0 1-.7 1.7H17Z" />
+                  <path d="M12 22v-3" />
+                </svg>
+              </span>
+              <h3 class="text-lg font-bold"> Biodiversity Preservation</h3>
+              <p class="mt-3 text-sm leading-relaxed text-white/80">Reducing reliance on firewood and charcoal by
+                providing clean biogas, reversing deforestation.</p>
+            </div>
+            <div class="reveal lift h-full rounded-2xl border border-white/20 bg-white/10 p-7 backdrop-blur-md">
+              <span
+                class="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-white/15 text-brand-amber">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" />
+                </svg>
+              </span>
+              <h3 class="text-lg font-bold">Energy Cost Savings &amp; Access</h3>
+              <p class="mt-3 text-sm leading-relaxed text-white/80">Localized sustainable energy for farms, SMEs, and
+                off-grid communities: reducing household expenses and enhancing energy access.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================= CONTACT ============================= -->
+      <section id="contact" class="relative overflow-hidden bg-brand-offwhite">
+        <div class="pointer-events-none absolute inset-0 opacity-[0.04]"
+          style="background-image:radial-gradient(#642121 1px,transparent 1px);background-size:24px 24px;"></div>
+        <div class="relative mx-auto w-full max-w-7xl px-5 py-20 text-center sm:px-8 md:py-28">
+          <div class="reveal">
+            <h2 class="text-3xl font-bold sm:text-4xl">Ready to power the future?</h2>
+            <p class="mx-auto mt-4 max-w-2xl text-lg text-brand-dark/75">Partner with Sync Energy to bring clean,
+              decentralized energy to communities across Nigeria.</p>
+            <div class="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <a href="mailto:SyncEnergy@gmail.com" class="btn-primary">
+                Join the Pilot Phase
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </a>
+              <a href="mailto:SyncEnergy@gmail.com" class="btn-outline">Get in Touch</a>
+            </div>
+            <a href="mailto:SyncEnergy@gmail.com"
+              class="mt-8 inline-block text-lg font-semibold text-brand-primary hover:text-brand-accent">SyncEnergy@gmail.com</a>
+          </div>
+        </div>
+      </section>
+  </main>
+
+  <!-- ============================= FOOTER ============================= -->
+  <footer class="bg-brand-dark text-white/80">
+    <div class="mx-auto max-w-7xl px-5 py-14 sm:px-8">
+      <div class="flex flex-col items-center gap-6 md:flex-row md:justify-between">
+        <a href="#hero" class="flex items-center gap-2 text-lg font-extrabold tracking-tight text-white">
+          <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-primary text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+              <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+            </svg>
+          </span>
+          Sync Energy
+        </a>
+        <nav aria-label="Footer" class="flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-white/80">
+          <a href="#about" class="nav-link text-sm font-medium">About</a>
+          <a href="#technology" class="nav-link text-sm font-medium">Technology</a>
+          <a href="#service" class="nav-link text-sm font-medium">Service</a>
+          <a href="#impact" class="nav-link text-sm font-medium">Impact</a>
+          <a href="#contact" class="nav-link text-sm font-medium">Contact</a>
+        </nav>
+      </div>
+
+      <div class="mt-8 flex flex-col items-center gap-5 md:flex-row md:justify-between">
+        <a href="mailto:SyncEnergy@gmail.com"
+          class="text-sm font-medium text-brand-accent hover:text-white">SyncEnergy@gmail.com</a>
+        <div class="flex items-center gap-3">
+          <a href="#" aria-label="LinkedIn"
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/80 hover:bg-brand-primary hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+              <rect width="4" height="12" x="2" y="9" />
+              <circle cx="4" cy="4" r="2" />
+            </svg>
+          </a>
+          <a href="#" aria-label="Twitter / X"
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/80 hover:bg-brand-primary hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+            </svg>
+          </a>
+          <a href="#" aria-label="Instagram"
+            class="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/80 hover:bg-brand-primary hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="my-8 h-px w-full bg-white/10"></div>
+
+      <div class="flex flex-col items-center gap-2 text-xs text-white/60 md:flex-row md:justify-between">
+        <p>© 2026 Sync Energy. All rights reserved.</p>
+        <p class="font-medium text-white/70">Waste to Power. Locally Built. Nationally Scalable.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ---- Sticky navbar: transparent over hero, solid on scroll ----
+    const navbar = document.getElementById("navbar");
+    const logo = document.getElementById("logo");
+    const desktopLinks = document.getElementById("desktop-links");
+    const hamburger = document.getElementById("hamburger");
+
+    function setNavColor(solid) {
+      if (solid) {
+        navbar.classList.add("bg-white", "shadow-card");
+        navbar.classList.remove("bg-transparent");
+        logo.classList.remove("text-white"); logo.classList.add("text-brand-dark");
+        desktopLinks.classList.remove("text-white"); desktopLinks.classList.add("text-brand-dark");
+        hamburger.classList.remove("text-white"); hamburger.classList.add("text-brand-dark");
+      } else {
+        navbar.classList.remove("bg-white", "shadow-card");
+        navbar.classList.add("bg-transparent");
+        logo.classList.add("text-white"); logo.classList.remove("text-brand-dark");
+        desktopLinks.classList.add("text-white"); desktopLinks.classList.remove("text-brand-dark");
+        hamburger.classList.add("text-white"); hamburger.classList.remove("text-brand-dark");
+      }
+    }
+    const drawer = document.getElementById("drawer");
+    const overlay = document.getElementById("overlay");
+    const iconMenu = document.getElementById("icon-menu");
+    const iconClose = document.getElementById("icon-close");
+    let menuOpen = false;
+
+    function onScroll() {
+      // keep solid while the menu is open
+      setNavColor(window.scrollY > 40 || menuOpen);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    // ---- Mobile drawer ----
+    function setMenu(open) {
+      menuOpen = open;
+      drawer.classList.toggle("translate-x-full", !open);
+      overlay.classList.toggle("hidden", !open);
+      iconMenu.classList.toggle("hidden", open);
+      iconClose.classList.toggle("hidden", !open);
+      hamburger.setAttribute("aria-expanded", String(open));
+      hamburger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      document.body.style.overflow = open ? "hidden" : "";
+      onScroll();
+    }
+    hamburger.addEventListener("click", () => setMenu(!menuOpen));
+    overlay.addEventListener("click", () => setMenu(false));
+    document.querySelectorAll(".drawer-link").forEach(l => l.addEventListener("click", () => setMenu(false)));
+
+    // ---- Scroll reveal (IntersectionObserver) ----
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add("in"); revealObserver.unobserve(e.target); }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll(".reveal").forEach((el, i) => {
+      el.style.transitionDelay = (i % 4) * 0.08 + "s";
+      revealObserver.observe(el);
+    });
+
+    // ---- Animated stat counters ----
+    function animateCounter(el) {
+      const target = parseFloat(el.dataset.target);
+      const decimals = parseInt(el.dataset.decimals || "0", 10);
+      const duration = 2000;
+      const start = performance.now();
+      function tick(now) {
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = (eased * target).toLocaleString("en-US", {
+          minimumFractionDigits: decimals, maximumFractionDigits: decimals,
+        });
+        if (p < 1) requestAnimationFrame(tick);
+        else el.textContent = target.toLocaleString("en-US", {
+          minimumFractionDigits: decimals, maximumFractionDigits: decimals,
+        });
+      }
+      requestAnimationFrame(tick);
+    }
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) { animateCounter(e.target); counterObserver.unobserve(e.target); }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll(".counter").forEach((el) => counterObserver.observe(el));
+
+  </script>
+
+
+</body>
+
+</html>
