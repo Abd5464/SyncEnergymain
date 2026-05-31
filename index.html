@@ -16,11 +16,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
     rel="stylesheet" />
 
   <script>
-    // Tailwind config — Sync Energy brand palette
+    // Tailwind config - Sync Energy brand palette
     tailwind.config = {
       theme: {
         extend: {
@@ -32,10 +32,18 @@
               offwhite: "#F7F9F5",
               amber: "#F5A623",
             },
+            dashboard: {
+              bg: "#081215",
+              card: "#0d1b1e",
+              accentGreen: "#2ECC71",
+              accentAmber: "#F5A623",
+              textMuted: "#64748B",
+            },
           },
           fontFamily: {
             sans: ["Inter", "system-ui", "sans-serif"],
             display: ["Sora", "Inter", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"],
           },
           boxShadow: {
             card: "0 4px 20px -4px rgba(17,24,39,0.08)",
@@ -192,6 +200,14 @@
       box-shadow: 0 16px 40px -8px rgba(17, 24, 39, .18);
     }
 
+    .metric-transition {
+      transition: color 0.5s ease, transform 0.2s ease;
+    }
+
+    .bar-transition {
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
     @media (prefers-reduced-motion: reduce) {
       html {
         scroll-behavior: auto;
@@ -282,7 +298,7 @@
     <!-- ============================= HERO ============================= -->
     <section id="hero" class="relative flex min-h-screen items-center overflow-hidden">
       <!-- Background: replace this gradient with: style="background-image:url('hero.jpg')" -->
-      <div class="absolute inset-0 "=>
+      <div class="absolute inset-0">
 
         <!-- Dark green gradient overlay for legibility -->
         <div class="absolute inset-0">
@@ -381,7 +397,7 @@
           <p class="reveal text-base leading-relaxed text-brand-dark/75 font-medium">
             Following the successful validation of our 25-liter prototype, which achieved stable biogas production over
             a 16-day
-            testing period, Sync Energy is scaling into its pilot phase with a 1m³ smart biodigester. Equipped with
+            testing period, Sync Energy is scaling into its pilot phase with a 1m&sup3; smart biodigester. Equipped with
             ESP32-based IoT
             monitoring, the system captures real-time operational data, enabling process optimization, performance
             analytics, and
@@ -404,26 +420,12 @@
       </div>
 
 
-      <div>
-
-
-      </div>
-
-
-      </div>
-
-
-      </div>
-
-
-
-
     </section>
 
 
 
 
-    <section id="technology" class="bg-[#050c0e] py-20 text-white overflow-hidden">
+    <section id="iot-framework" class="bg-[#050c0e] py-20 text-white overflow-hidden">
       <div class="mx-auto w-full max-w-7xl px-5 sm:px-8">
 
         <div
@@ -468,7 +470,7 @@
 
             <div class="space-y-4 pt-4 border-t border-slate-800/60 text-xs sm:text-sm">
               <div class="flex items-start gap-3">
-                <span class="text-dashboard-accentGreen mt-1 font-bold">✓</span>
+                <span class="text-dashboard-accentGreen mt-1 font-bold">&check;</span>
                 <p class="text-slate-300">
                   <strong class="text-white uppercase font-mono tracking-wider">Input Vector
                     Monitoring:</strong> Real-time tracking of mass, feedstock profiles, and loading
@@ -476,7 +478,7 @@
                 </p>
               </div>
               <div class="flex items-start gap-3">
-                <span class="text-dashboard-accentGreen mt-1 font-bold">✓</span>
+                <span class="text-dashboard-accentGreen mt-1 font-bold">&check;</span>
                 <p class="text-slate-300">
                   <strong class="text-white uppercase font-mono tracking-wider">Biological
                     Balancing:</strong> Waterproof DS18B20 nodes and pH arrays monitor decomposition
@@ -516,7 +518,7 @@
                     <span>Digester Reaction Temp</span>
                   </div>
                   <div class="text-3xl font-bold text-white mt-2 font-sans flex items-baseline gap-1 metric-transition">
-                    <span id="metric-temp">37.0</span><span class="text-lg font-light text-slate-400">°C</span>
+                    <span id="metric-temp">37.0</span><span class="text-lg font-light text-slate-400">&deg;C</span>
                   </div>
                 </div>
                 <div class="w-full bg-slate-800 h-1 rounded mt-5 overflow-hidden">
@@ -587,7 +589,7 @@
                   Anaerobic Breakdown Formula
                 </div>
                 <div class="text-sm font-semibold text-white mt-3 tracking-wide">
-                  C₆H₁₂O₆ → 3CH₄ + 3CO₂
+                  C<sub>6</sub>H<sub>12</sub>O<sub>6</sub> &rarr; 3CH<sub>4</sub> + 3CO<sub>2</sub>
                 </div>
                 <div class="text-slate-600 text-[10px] mt-2"></div>
               </div>
@@ -619,12 +621,9 @@
     </section>
 
 
-    </section>
 
 
-    </section>
 
-    <section>
 
 
 
@@ -650,7 +649,7 @@
             <!-- Card 1 -->
             <article
               class="reveal lift group h-full rounded-2xl border border-transparent bg-white p-7 shadow-card hover:border-brand-primary">
-              <span class="text-4xl">🔥</span>
+              <span class="text-4xl">&#128293;</span>
               <h3 class="mt-4 text-xl font-bold">Clean Cooking Energy Products</h3>
               <p class="mt-3 text-sm leading-relaxed text-brand-dark/75">We produce and distribute biogas for
                 household and institutional use, packaged in cylinders and storage bag systems.
@@ -661,7 +660,7 @@
             <!-- Card 2 -->
             <article
               class="reveal lift group h-full rounded-2xl border border-transparent bg-white p-7 shadow-card hover:border-brand-primary">
-              <span class="text-4xl">⚡</span>
+              <span class="text-4xl">&#9889;</span>
               <h3 class="mt-4 text-xl font-bold">Energy-as-a-Service (EaaS)</h3>
               <p class="mt-3 text-sm leading-relaxed text-brand-dark/75">Sync Energy delivers decentralized energy
                 solutions for mobility and power generation systems, including:</p>
@@ -682,7 +681,7 @@
             <!-- Card 3 -->
             <article
               class="reveal lift group h-full rounded-2xl border border-transparent bg-white p-7 shadow-card hover:border-brand-primary">
-              <span class="text-4xl">🌱</span>
+              <span class="text-4xl">&#127793;</span>
               <h3 class="mt-4 text-xl font-bold">Organic Fertilizer Commercialization</h3>
               <p class="mt-3 text-sm leading-relaxed text-brand-dark/75">The digestate from our biogas process is
                 refined
@@ -703,7 +702,7 @@
             <!-- Card 4 -->
             <article
               class="reveal lift group h-full rounded-2xl border border-transparent bg-white p-7 shadow-card hover:border-brand-primary">
-              <span class="text-4xl">🏗️</span>
+              <span class="text-4xl">&#127959;</span>
               <h3 class="mt-4 text-xl font-bold">Infrastructure &amp; EPC Services</h3>
               <p class="mt-3 text-sm leading-relaxed text-brand-dark/75">At scale, Sync Energy expands into Energy
                 Generation with Engineering, Procurement, and Construction (EPC) services, including:</p>
@@ -887,7 +886,7 @@
       <div class="my-8 h-px w-full bg-white/10"></div>
 
       <div class="flex flex-col items-center gap-2 text-xs text-white/60 md:flex-row md:justify-between">
-        <p>© 2026 Sync Energy. All rights reserved.</p>
+        <p>&copy; 2026 Sync Energy. All rights reserved.</p>
         <p class="font-medium text-white/70">Waste to Power. Locally Built. Nationally Scalable.</p>
       </div>
     </div>
@@ -954,6 +953,86 @@
       el.style.transitionDelay = (i % 4) * 0.08 + "s";
       revealObserver.observe(el);
     });
+
+    // ---- Smart IoT dashboard telemetry simulator ----
+    const elTemp = document.getElementById("metric-temp");
+    const barTemp = document.getElementById("bar-temp");
+    const elPh = document.getElementById("metric-ph");
+    const barPh = document.getElementById("bar-ph");
+    const elMass = document.getElementById("metric-mass");
+    const elYield = document.getElementById("metric-yield");
+    const elLabel = document.getElementById("active-feedstock");
+    const streamStatus = document.getElementById("stream-status");
+    const containerPh = document.getElementById("container-ph");
+    const safetyCard = document.getElementById("safety-card");
+    const safetyText = document.getElementById("safety-text");
+    const safetyDot = document.getElementById("safety-dot");
+    const hasDashboard = Boolean(
+      elTemp && barTemp && elPh && barPh && elMass && elYield && elLabel &&
+      streamStatus && containerPh && safetyCard && safetyText && safetyDot
+    );
+
+    if (hasDashboard) {
+      streamStatus.textContent = "TELEMETRY_ONLINE";
+
+      setTimeout(() => {
+        barTemp.style.width = "74%";
+        barPh.style.width = "69%";
+      }, 400);
+
+      setInterval(() => {
+        const activeFeedstock = elLabel.textContent.trim().replace(/\s+/g, " ");
+
+        if (activeFeedstock === "Standard Mix" || activeFeedstock === "Cow Manure") {
+          const currentTemp = (36.8 + Math.random() * 0.4).toFixed(1);
+          const currentPh = (6.88 + Math.random() * 0.06).toFixed(2);
+
+          elTemp.textContent = currentTemp;
+          elPh.textContent = currentPh;
+          barTemp.style.width = `${(currentTemp / 50) * 100}%`;
+          barPh.style.width = `${(currentPh / 10) * 100}%`;
+        }
+      }, 3000);
+    }
+
+    function simulateFeedstock(name, baseTemp, basePh, mass, yieldPct) {
+      if (!hasDashboard) return;
+
+      streamStatus.textContent = "PROCESSING_INPUT...";
+      streamStatus.classList.remove("text-dashboard-accentGreen");
+      streamStatus.classList.add("text-dashboard-accentAmber");
+
+      elLabel.textContent = name;
+      elMass.textContent = mass.toFixed(2);
+      elYield.textContent = yieldPct.toFixed(1);
+      elTemp.textContent = baseTemp.toFixed(1);
+      elPh.textContent = basePh.toFixed(2);
+      barTemp.style.width = `${(baseTemp / 50) * 100}%`;
+      barPh.style.width = `${(basePh / 10) * 100}%`;
+
+      if (basePh < 6.5) {
+        containerPh.classList.remove("text-dashboard-accentGreen");
+        containerPh.classList.add("text-dashboard-accentAmber");
+        safetyCard.className = "md:col-span-7 bg-amber-950/30 border border-amber-700/40 p-4 rounded-xl flex items-center justify-between transition-colors duration-500";
+        safetyText.className = "text-dashboard-accentAmber text-xs font-bold uppercase tracking-wider leading-tight";
+        safetyText.textContent = "SYSTEM NOTICE: VOLATILE ACID FATTY ACCUMULATION // OPTIMIZING FEED RATE";
+        safetyDot.className = "w-2 h-2 rounded-full bg-dashboard-accentAmber mt-1.5 flex-shrink-0 animate-ping";
+      } else {
+        containerPh.classList.add("text-dashboard-accentGreen");
+        containerPh.classList.remove("text-dashboard-accentAmber");
+        safetyCard.className = "md:col-span-7 bg-emerald-950/20 border border-emerald-900/40 p-4 rounded-xl flex items-center justify-between transition-colors duration-500";
+        safetyText.className = "text-dashboard-accentGreen text-xs font-bold uppercase tracking-wider leading-tight";
+        safetyText.textContent = "MQ-4 ALERT: CONFORMANCE SAFE // 0 PPM LEAK DETECTED";
+        safetyDot.className = "w-2 h-2 rounded-full bg-dashboard-accentGreen mt-1.5 flex-shrink-0 animate-pulse";
+      }
+
+      setTimeout(() => {
+        streamStatus.textContent = "TELEMETRY_ONLINE";
+        streamStatus.classList.add("text-dashboard-accentGreen");
+        streamStatus.classList.remove("text-dashboard-accentAmber");
+      }, 1200);
+    }
+    window.simulateFeedstock = simulateFeedstock;
 
     // ---- Animated stat counters ----
     function animateCounter(el) {
